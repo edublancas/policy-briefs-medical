@@ -1,6 +1,6 @@
 # Policy briefs (Medical)
 
-Coordinadores: @edublancas y @anabva
+Coordinadores: [@edublancas](https://github.com/edublancas) y [@anabva](https://github.com/anabva)
 
 *Importante: este documento está en proceso de desarrollo, consúltalo frecuentemente para estar actualizado.*
 
