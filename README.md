@@ -34,7 +34,7 @@ Antes de comenzar a participar, necesitas unirte a las plataformas (gratuitas) q
 1.  Seleciona un país para empezar a llenar la informacion de las [variables médicas](https://docs.google.com/spreadsheets/d/11rKQBzE6F6GYQxmcZWlwTWMmNq3wjirIr6XWGw-BGxQ/edit#gid=0) que se requieren. 
 2. Coloca tu nombre en la columna de "Encargado", esto nos ayudará a tener una referencia de quién está trabajando en cada país
 3. Abre un [issue](https://github.com/brigadadigitalmx/policy-briefs-medical/issues/new) en el repositorio, los "issues" en Github nos permitirán mantener la discusión abierta sobre el avance por país
-3. Busca información en bases de datos, papers, etc. para llenar la mayor cantidad de variables médicas. Guarda tus notas en un archivo Markdown, es importante que las notas incluyan todas las fuentes consultadas.
+3. Busca información en bases de datos, papers, etc (Hay una lista de fuentes recomendaas en el archivo [`FUENTES.md`](fuentes.md). para llenar la mayor cantidad de variables médicas. Guarda tus notas en un archivo Markdown, es importante que las notas incluyan todas las fuentes consultadas.
 4. Sube tus notas y cualquier script que hayas usado (por ejemplo, si calculaste alguna variable usando R o Python) al repositorio. Crea un carpeta con el nombre del país e incluye todos los archivos ahí. No subas conjuntos de datos, solo incluye la URL para descargarlos. El folder `example/` muestra como vamos a organizar los archivos
 
 ## Gracias
