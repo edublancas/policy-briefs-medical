@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 import shutil
 import zipfile
@@ -5,8 +6,13 @@ import zipfile
 import pandas as pd
 
 from ploomber import DAG
-from ploomber.products import File
-from ploomber.tasks import DownloadFromURL, PythonCallable
+from ploomber.products import File, GenericProduct
+from ploomber.tasks import DownloadFromURL, PythonCallable, UploadToS3
+from ploomber.clients import SQLAlchemyClient
+
+parser = argparse.ArgumentParser(description='Run pipeline')
+parser.add_argument('--upload', action='store_true')
+args = parser.parse_args()
 
 ROOT = Path('data/')
 ROOT.mkdir(exist_ok=True)
@@ -33,6 +39,10 @@ def _clean(upstream, product):
 
 # https://data.worldbank.org/indicator/sp.pop.totl
 dag = DAG()
+
+client = SQLAlchemyClient('sqlite:///metadata.db')
+dag.clients[GenericProduct] = client
+
 source = 'http://api.worldbank.org/v2/en/indicator/SP.POP.TOTL?downloadformat=csv'
 compressed = DownloadFromURL(source, File(ROOT / 'population.zip'), dag,
                              name='compressed')
@@ -84,4 +94,14 @@ rate = PythonCallable(_mortality_rate, File(ROOT / 'mortality_rate.csv'), dag,
 
 (clean_deaths + clean) >> rate
 
-dag.build()
+if args.upload:
+    upload = UploadToS3('{{upstream["mortality_rate"]}}',
+                        GenericProduct('mortality_rate_s3'), dag,
+                        bucket='mx-covid-data',
+                        name='upload_s3')
+
+    rate >> upload
+
+table = dag.build()
+
+print(table)

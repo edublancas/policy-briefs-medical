@@ -1,2 +1,2 @@
-ploomber
+git+https://github.com/ploomber/ploomber.git@dev#egg=ploomber[all]
 pandas
