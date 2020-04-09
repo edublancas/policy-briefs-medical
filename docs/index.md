@@ -1,9 +1,26 @@
 ## Datos
 
-* Tasas de mortalidad por país. [Click para descargar.](https://mx-covid-data.s3-us-west-1.amazonaws.com/mortality_rate.csv)
+## Tasa de mortalidad
+
+* Por país. [Click para descargar.](https://mx-covid-data.s3-us-west-1.amazonaws.com/mortality_rate.csv)
     - Falta arreglar el join con algunos países cuyo nombre no coincide
-* Secretaría de salud. Casos confirmados (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/confirmed.csv)
-* Secretaría de salud. Casos sospechosos (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/suspected.csv)
+
+### Fuentes
+
+* [Banco Mundial (población)](https://data.worldbank.org/indicator/sp.pop.totl)
+* [JHU CSSE (Número de casos por país)](https://github.com/CSSEGISandData/COVID-19)
+
+
+## Secretaría de Salud (México)
+
+* Casos confirmados (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/confirmed.csv)
+* Casos sospechosos (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/suspected.csv)
+
+Casos reportados hasta el 8 de abril.
+
+### Fuentes
+
+* [Secretaría de Salud (archivos en PDF)](https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449)
 
 
 ## Reporta un error
