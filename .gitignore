@@ -4,6 +4,8 @@
 *.db
 *.feather
 *.parquet
+*.source
+data/
 
 
 #### r ####
