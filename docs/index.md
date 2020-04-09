@@ -25,7 +25,7 @@ Casos reportados hasta el 8 de abril.
 
 * [Secretaría de Salud (archivos en PDF)](https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449)
 
-## Hospitalizacions
+## Hospitalizaciones
 
 * [California, EE.UU.](https://data.chhs.ca.gov/dataset/california-covid-19-hospital-data-and-case-statistics/resource/6cd8d424-dfaa-4bdd-9410-a3d656e1176e)
 
