@@ -5,7 +5,9 @@
 *.feather
 *.parquet
 *.source
+*.jar
 data/
+bin/
 
 
 #### r ####
