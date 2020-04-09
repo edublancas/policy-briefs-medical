@@ -5,7 +5,7 @@ Estaremos procesando datos y subiéndolos diariamente para facililar su uso. El 
 
 # Secretaría de Salud (México)
 
-La Secretaría de Salud en México reporta diariamente el número de casos confirmados y sospechosos en formato PDF. Nosotros descargamos dicho archivo, extraemos las tablas y y las convertirmos a CSV.
+La Secretaría de Salud en México reporta diariamente el número de casos confirmados y sospechosos en formato PDF. Nosotros descargamos dicho archivo, extraemos las tablas y y las convertirmos a CSV. [Click aquí para ver el código.](https://github.com/brigadadigitalmx/policy-briefs-medical/tree/master/pipelines/mx-health-ministry)
 
 Actualizado el 8 de abril de 2020.
 
@@ -23,7 +23,7 @@ Para obtener datos historicos, cambia la fecha en la URL. Los datos empezaron a 
 
 # Tasa de mortalidad por país
 
-Tasa de mortalidad por país (por cada 100,000 habitantes).
+Tasa de mortalidad por país (por cada 100,000 habitantes). [Click aquí para ver el código.](https://github.com/brigadadigitalmx/policy-briefs-medical/tree/master/pipelines/mortality)
 
 * [Click para descargar.](https://mx-covid-data.s3-us-west-1.amazonaws.com/mortality_rate.csv)
 
@@ -39,5 +39,5 @@ Tasa de mortalidad por país (por cada 100,000 habitantes).
 
 # Reporta un error
 
-Si encontraste un error en los datos o en esta página. [Click aquí para reportarlo.](https://github.com/brigadadigitalmx/policy-briefs-medical/issues/new).
+Si encontraste un error en los datos o en esta página. [Click aquí para reportarlo.](https://github.com/brigadadigitalmx/policy-briefs-medical/issues/new)
 
