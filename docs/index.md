@@ -1,35 +1,43 @@
-## Datos
 
-Algunos conjuntos de datos han sido procesados por nosotros para facilitar su uso. Cuando la fuente original de datos está en un formato abierto y accesible, solo incluimos la liga.
+Bienvenido al Banco de datos médicos de la Brigada Digital MX. Nuestro objetivo es facilitar el acceso a datos médicos.
 
-## Tasa de mortalidad
+Estaremos procesando datos y subiéndolos diariamente para facililar su uso. El código que usamos para procesar los datos está disponible en nuestro repositorio en caso de que quieras reproducir o modificar el procedimiento.
 
-* Por país. [Click para descargar.](https://mx-covid-data.s3-us-west-1.amazonaws.com/mortality_rate.csv)
-    - Falta arreglar el join con algunos países cuyo nombre no coincide
+# Secretaría de Salud (México)
 
-### Fuentes
+La Secretaría de Salud en México reporta diariamente el número de casos confirmados y sospechosos en formato PDF. Nosotros descargamos dicho archivo, extraemos las tablas y y las convertirmos a CSV.
+
+Actualizado el 8 de abril de 2020.
+
+ 
+* Casos confirmados (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/confirmed.csv)
+* Casos sospechosos (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/suspected.csv)
+
+
+Para obtener datos historicos, cambia la fecha en la URL. Los datos empezaron a ser capturados el 8 de abril de 2020.
+
+## Fuentes originales
+
+* [Secretaría de Salud (archivos en PDF)](https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449)
+
+
+# Tasa de mortalidad por país
+
+Tasa de mortalidad por país (por cada 100,000 habitantes).
+
+* [Click para descargar.](https://mx-covid-data.s3-us-west-1.amazonaws.com/mortality_rate.csv)
+
+## Fuentes originales
 
 * [Banco Mundial (población)](https://data.worldbank.org/indicator/sp.pop.totl)
 * [JHU CSSE (Número de casos por país)](https://github.com/CSSEGISandData/COVID-19)
 
-
-## Secretaría de Salud (México)
-
-* Casos confirmados (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/confirmed.csv)
-* Casos sospechosos (CSV). [Click para descargar](https://mx-covid-data.s3-us-west-1.amazonaws.com/mx-health-ministry/2020.04.08/suspected.csv)
-
-Casos reportados hasta el 8 de abril.
-
-
-### Fuentes
-
-* [Secretaría de Salud (archivos en PDF)](https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449)
-
-## Hospitalizaciones
+# Hospitalizaciones
 
 * [California, EE.UU.](https://data.chhs.ca.gov/dataset/california-covid-19-hospital-data-and-case-statistics/resource/6cd8d424-dfaa-4bdd-9410-a3d656e1176e)
 
 
-## Reporta un error
+# Reporta un error
 
-[Click aqui](https://github.com/brigadadigitalmx/policy-briefs-medical/issues/new).
+Si encontraste un error en los datos o en esta página. [Click aquí para reportarlo.](https://github.com/brigadadigitalmx/policy-briefs-medical/issues/new).
+
