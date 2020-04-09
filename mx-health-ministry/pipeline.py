@@ -85,17 +85,17 @@ suspected >> clean_suspected
 
 
 if args.upload:
-    upload_confirmed = UploadToS3('{{upstream["get_confirmed.sh"]}}',
+    upload_confirmed = UploadToS3('{{upstream["clean_confirmed"]}}',
                                   GenericProduct('mx_confirmed_s3'), dag,
                                   bucket='mx-covid-data',
                                   name='upload_mx_confirmed')
-    upload_suspected = UploadToS3('{{upstream["get_suspected.sh"]}}',
+    upload_suspected = UploadToS3('{{upstream["clean_suspected"]}}',
                                   GenericProduct('mx_suspected_s3'), dag,
                                   bucket='mx-covid-data',
                                   name='upload_mx_suspected')
 
     clean_confirmed >> upload_confirmed
-    suspected >> upload_suspected
+    clean_suspected >> upload_suspected
 
 
 table = dag.build()
