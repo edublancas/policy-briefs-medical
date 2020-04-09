@@ -5,4 +5,4 @@
 
 ## Reporta un error
 
-[Click aqui](github.com/brigadadigitalmx/policy-briefs-medical).
+[Click aqui](https://github.com/brigadadigitalmx/policy-briefs-medical/issues/new).
