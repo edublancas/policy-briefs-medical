@@ -1,9 +1,4 @@
----
-author: @edublancas
-country: [nombre del pais]
----
-
-# [Nombre del país]
+# Nombre de la variable
 
 
 ## Referencias
