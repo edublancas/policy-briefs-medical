@@ -1,3 +1,4 @@
+import zipfile
 from datetime import date, timedelta
 from io import StringIO
 import numpy as np
@@ -9,7 +10,8 @@ import pandas as pd
 
 from ploomber import DAG, SourceLoader
 from ploomber.products import File, GenericProduct
-from ploomber.tasks import PythonCallable, ShellScript, UploadToS3
+from ploomber.tasks import (PythonCallable, ShellScript, UploadToS3,
+                            DownloadFromURL)
 from ploomber.clients import SQLAlchemyClient
 
 parser = argparse.ArgumentParser(description='Run pipeline')
@@ -19,6 +21,10 @@ args = parser.parse_args()
 
 def parse_bad_line(line, regex):
     elements = re.findall(regex, line)
+
+    if not elements:
+        raise ValueError('Error parsing line: ', line)
+
     return ','.join(elements[0])
 
 
@@ -38,15 +44,68 @@ def _clean(upstream, product, regex):
 
     lines_good = lines[idxs == 1]
     lines_bad = lines[idxs == 2]
-    lines_fixed = [parse_bad_line(l, regex) for l in lines_bad]
-
+    lines_fixed = [parse_bad_line(l.replace(',', ''), regex)
+                   for l in lines_bad]
     fixed = lines_fixed + list(lines_good)
-    content = '\n'.join(fixed)
+
+    filtered = []
+
+    for l in fixed:
+        if len(l.split(',')) != 6:
+            print('Ignoring row: ', l)
+        else:
+            filtered.append(l)
+
+    content = '\n'.join(filtered)
 
     names = ['N Caso', 'Estado', 'Sexo', 'Edad',
              'Fecha de inicio de síntomas',
              'Identificación de COVID-19 por RT-PCR en tiempo real']
     df = pd.read_csv(StringIO(content), names=names)
+    df.to_csv(str(product), index=False)
+
+
+def _uncompress(upstream, product):
+    with zipfile.ZipFile(str(upstream.first), 'r') as zip_ref:
+        zip_ref.extractall(str(product))
+
+
+def _pop_by_state(upstream, product):
+    path = Path(str(upstream.first), 'iter_00_cpv2010', 'conjunto_de_datos',
+                'iter_00_cpv2010.csv')
+    df = pd.read_csv(str(path))
+    df = df[(df.mun == 0) & (df['loc'] == 0) & (df.entidad > 0)]
+    df[['nom_ent', 'pobtot']].to_csv(str(product), index=False)
+
+
+def _agg(upstream, product):
+    pop = pd.read_csv(str(upstream['pop_by_state']))
+    confirmed = pd.read_csv(str(upstream['clean_confirmed']))
+    suspected = pd.read_csv(str(upstream['clean_suspected']))
+
+    pop['nom_ent'] = pop.nom_ent.str.upper()
+    pop['nom_ent'] = pop.nom_ent.replace({'COAHUILA DE ZARAGOZA': 'COAHUILA',
+                                          'DISTRITO FEDERAL': 'CIUDAD DE MÉXICO',
+                                          'MICHOACÁN DE OCAMPO': 'MICHOACÁN',
+                                          'QUERÉTARO': 'QUERETARO',
+                                          'VERACRUZ DE IGNACIO DE LA LLAVE':
+                                          'VERACRUZ'})
+    pop.columns = ['Estado', 'Poblacion']
+
+    conf_by_state = pd.DataFrame(confirmed.groupby('Estado').size())
+    conf_by_state.columns = ['Confirmados']
+
+    susp_by_state = pd.DataFrame(suspected.groupby('Estado').size())
+    susp_by_state.columns = ['Sospechosos']
+
+    df = pop.merge(conf_by_state, on='Estado', how='left')
+    df = df.merge(susp_by_state, on='Estado', how='left')
+
+    df['confirmados_sobre_100k_habs'] = (df.Confirmados /
+                                         (df.Poblacion / 100_000))
+    df['sospechosos_sobre_100k_habs'] = (df.Sospechosos /
+                                         (df.Poblacion / 100_000))
+
     df.to_csv(str(product), index=False)
 
 
@@ -63,6 +122,17 @@ def make(date_):
 
     loader = SourceLoader(path='.')
 
+    source = 'https://www.inegi.org.mx/contenidos/programas/ccpv/2010/datosabiertos/iter_nal_2010_csv.zip'
+    population_zip = DownloadFromURL(source, File(ROOT / 'population.zip'),
+                                     dag, name='population.zip')
+    population = PythonCallable(_uncompress, File(ROOT / 'population'),
+                                dag, name='population')
+    pop_by_state = PythonCallable(_pop_by_state,
+                                  File(ROOT / 'pop_by_state.csv'),
+                                  dag, name='pop_by_state')
+
+    population_zip >> population >> pop_by_state
+
     confirmed = ShellScript(loader['get_confirmed.sh'],
                             {'pdf': File(ROOT / 'confirmed.pdf'),
                              'csv': File(ROOT / 'confirmed.csv')},
@@ -75,9 +145,9 @@ def make(date_):
                             params={'date_str': date_str})
 
     confirmed_regex = re.compile(
-        r'^(\d+)\s{1}([\w\s]+)\s{1}(FEMENINO|MASCULINO)\s{1}(\d+),(.+),(Confirmado)')
+        r'^(\d+)\s{1}([\w\s]+)\s{1}(FEMENINO|MASCULINO)\s{1}(\d+)\s{1}(.+)\s{1}(Confirmado)')
     suspected_regex = re.compile(
-        r'^(\d+)\s{1}([\w\s]+)\s{1}(FEMENINO|MASCULINO)\s{1}(\d+)\s{1}(.+)\s{1}(Sospechoso)')
+        r'^(\d+)\s{1}([\w\s]+)\s{1}(FEMENINO|MASCULINO)\s{1}(\d+)\s{1}(.+)\s?(Sospechoso)')
 
     clean_confirmed = PythonCallable(_clean,
                                      File(ROOT / 'confirmed_clean.csv'),
@@ -91,8 +161,14 @@ def make(date_):
                                      name='clean_suspected',
                                      params={'regex': suspected_regex})
 
-    confirmed >> clean_confirmed
-    suspected >> clean_suspected
+    agg = PythonCallable(_agg,
+                         File(ROOT / 'cases_and_population.csv'),
+                         dag,
+                         name='cases_pop')
+
+    confirmed >> clean_confirmed >> agg
+    suspected >> clean_suspected >> agg
+    pop_by_state >> agg
 
     if args.upload:
         upload_confirmed = UploadToS3('{{upstream["clean_confirmed"]}}',
@@ -109,6 +185,15 @@ def make(date_):
 
         clean_confirmed >> upload_confirmed
         clean_suspected >> upload_suspected
+
+        upload_agg = UploadToS3('{{upstream["cases_pop"]}}',
+                                GenericProduct(
+                                    'mx-health-ministry/{}/cases_pop.csv'.format(date_str)),
+                                dag,
+                                bucket='mx-covid-data',
+                                name='upload_cases_pop')
+
+        agg >> upload_agg
 
     return dag
 
