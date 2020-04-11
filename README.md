@@ -41,3 +41,4 @@ Antes de comenzar a participar, necesitas unirte a las plataformas (gratuitas) q
 
 Muchas gracias por tu tiempo y esfuerzo, este trabajo lo haremos en equipo. Así
 que lo más importante será la comunicación y confianza. Si tienes dudas, siempre  puedes preguntarnos, si requieres ayuda también.
+
